@@ -1,400 +1,287 @@
-# Designing a store data base
+# 🌍 Project 1: SQL Data Analysis – World Database Project
 
-1. Understanding the Business Requirements 
+This project uses the classic MySQL world sample database to demonstrate core and advanced SQL querying skills across relational datasets including city, country, and countrylanguage.
 
-a) What kind of data will the database need to store? 
+# 🔎 Skills Demonstrated
 
-1. Product(inventory data): 
+Basic data retrieval (SELECT, LIMIT)
 
-product_id - Unique identifier for each product 
+Filtering with WHERE, BETWEEN, LIKE, NULL
 
-barcode - Product barcode for scanning 
+Sorting with ORDER BY
 
-product_name - Full name of the item 
+Aggregate functions (AVG, COUNT, MIN, MAX)
 
-product_category - Main category (Bakery, Dairy, Drinks) 
+Grouped aggregation (GROUP BY)
 
-product_subcategory - More specific category (Bread, Milk, Soft Drinks) 
+Relational joins (INNER JOIN, LEFT JOIN)
 
-product_description - Detailed product information 
+Subqueries (scalar & analytical)
 
-cost_price - Price paid to supplier (for profit calculation) 
+Window functions (RANK() OVER (PARTITION BY...))
 
-selling_price - Price charged to customers 
+Derived metrics (Population Density, GDP per Capita)
 
-stock_quantity - Current stock level 
+Multi-table analytical queries
 
-is_discontinued - Whether item is still sold 
+# 📊 Analytical Queries Implemented
 
-2. Sale(transactions) data:  
+Countries with highest life expectancy
 
-sale_id - Unique transaction identifier 
+Most populated cities and countries
 
-sale_date - Date of sale 
+Capital city population comparison
 
-sale_time - Time of sale 
+Average city population by country
 
-customer_id - Customer who made purchase (if loyalty used) 
+Population density calculations
 
-staff_id - Staff member who processed sale 
+GDP per capita comparisons
 
-total_amount - Total sale value before discount 
+City name frequency analysis
 
-total_discount - Total discount applied 
+Ranking cities by population within each country
 
-payment_method - Cash, Card, etc. 
+#🧠 Key Concepts Applied
 
-3. Sale item data: 
+# Relational database modelling
 
-sale_item_id - Unique line item identifier 
+Query optimisation using joins instead of nested queries
 
-sale_id - Links to sale table 
+Analytical SQL techniques
 
-product_id - Product purchased 
+Window functions for ranking and partitioning
 
-quantity - Number of items 
+Data-driven insights from structured datasets
 
-unit_selling_price - Price per item 
+# 🛠 Tech Stack
 
-line_discount - Discount on this line 
+MySQL
 
-line_total - Total for this line after discount 
+SQL (ANSI + MySQL-specific features)
 
- 4. Customer data: 
 
-customer_id - Unique customer identifier 
 
-customer_name - Full name 
+# Project 2 - 🏪 Retail Store Database Design (SQL Project)
 
-phone_number - Contact phone 
+# 📌 Project Overview
 
-address_line1 - First line of address 
+This project demonstrates the design and implementation of a relational database for a retail store. The system supports inventory management, sales transactions, staff tracking, and a customer loyalty program.
 
-address_line2 - Second line of address 
+The database was designed using business requirement analysis, normalisation principles, and relational modelling best practices.
 
-city - City/Town 
+# 🧠 1. Business Requirements Analysis
 
-postcode - Postal code 
+Before designing the schema, key stakeholders and operational needs were identified.
 
-loyalty_points_balance - Current loyalty points 
+# 🎯 Core Data Requirements
 
-3. Staff Data: 
+The system stores:
 
-staff_id - Unique identifier 
+Products (Inventory)
 
-staff_name - Employee name 
+Sales Transactions
 
-role - Cashier/Supervisor/Manager 
+Sale Line Items
 
- We would need to speak to different stakeholders in the business who would be involved in data collection, handling, safeguarding analysis to understand what data/fields they need and create a minimal viable product based on that. 
+Customers
 
-b) Who will be the users of the database, and what will they need to accomplish? 
+Staff
 
-1. Business Owner/Manager 
-Manages overall operations, reviews sales and profit reports, monitors stock levels, tracks best-selling products, monitors loyalty programs,forecasts demand, and plans orders. Requires read access to all tables, report generation functions, and limited write access to update stock or approve adjustments. 
+Loyalty Transactions
 
-2. Sales Staff/Cashiers 
-Record sales transactions, update stock quantities in real time, and register new customers in the loyalty program. Require insert and update access to Sale, Sales_Items, and Customer tables, plus read access to inventory for product availability. 
+The design ensures:
 
-3. Administrative/Inventory Staff 
-Update product details, pricing, add new employees, manage loyalty points, and support financial or inventory reporting. Require insert, update, and read access to Product, Staff, Customer, and Loyalty transactions, with read-only access to Sale and Sales_Items. 
+Profit calculation (cost vs selling price)
 
-4. Store Accountant/Finance Staff 
-Monitor sales revenue, generate financial reports, and track customer payments or refunds. Require read access to Sale, Sales_Items, Customer, and Loyalty Transactions tables, and limited update access for adjusting financial records where necessary. 
+Stock tracking
 
-2. Designing the Database Schema 
+Staff accountability
 
-a) How would you structure the database tables? 
+Loyalty program tracking
 
-The database would be structured using multiple related tables to reduce duplication and improve efficiency. Key tables include Customer, Staff, Product, Sale, Sale Items and Loyalty Transactions.  
+Transaction-level detail
 
-Customer table required for communication, marketing and loyalty programme. 
+# 👥 2. User Roles & Access Control
 
-customer_id             INT PRIMARY KEY AUTO_INCREMENT 
-customer_name      VARCHAR(100) NOT NULL 
-phone_number        VARCHAR(20) 
-address_line1           VARCHAR(100) 
-address_line2           VARCHAR(100) 
-city                             VARCHAR(50) 
-postcode                   VARCHAR(10) 
-loyalty_points_balance  INT NOT NULL DEFAULT 0 
-created_date            DATETIME DEFAULT CURRENT_TIMESTAMP );
+![alt text](https://github.com/user-attachments/assets/bfd341da-afa7-4b9b-a008-051a643e0080)
 
-Staff table to store information about staff and link them back to individual transactions. 
 
-staff_id    INT PRIMARY KEY AUTO_INCREMENT 
-staff_name  VARCHAR(100) NOT NULL 
-role        VARCHAR(50) 
-created_date            DATETIME DEFAULT CURRENT_TIMESTAMP )
+Role-based access control was considered during schema planning.
+
+# 🏗 3. Database Schema Design
+
+The schema follows relational design principles and minimises redundancy.
+
+📊 Core Tables
+
+customer
+
+staff
+
+product
+
+sale
+
+sale_item (junction table)
+
+loyalty_transaction
+
+🔗 Relationships
+One-to-Many
+
+Customer → Sale
+
+Staff → Sale
+
+Sale → Sale Item
+
+Product → Sale Item
+
+Customer → Loyalty Transaction
+
+Sale → Loyalty Transaction
+
+Many-to-Many (Resolved)
+
+Sale ↔ Product
+
+Implemented via sale_item junction table
+
+This structure ensures referential integrity and prevents data duplication.
  
 
-Product Table to store information related to items sold in the shop, including pricing and stock quantity. 
+# 🗺 Entity Relationship Diagram
 
-product_id          INT PRIMARY KEY AUTO_INCREMENT 
-barcode             VARCHAR(30) NOT NULL UNIQUE 
-product_name        VARCHAR(100) NOT NULL 
-product_category    VARCHAR(50) NOT NULL 
-product_subcategory VARCHAR(50) 
-product_description TEXT 
-cost_price          DECIMAL(10,2) NOT NULL 
-selling_price       DECIMAL(10,2) NOT NULL 
-stock_quantity      INT NOT NULL DEFAULT 0 
-is_discontinued     BOOLEAN NOT NULL DEFAULT FALSE 
-created_date        DATE NOT NULL DEFAULT CURDATE() 
-
- 
-  4. Sale table to record each transaction made in the store. 
-
-sale_id         INT PRIMARY KEY AUTO_INCREMENT 
-sale_date       DATE NOT NULL 
-sale_time       TIME NOT NULL 
-customer_id     INT NULL  
-staff_id        INT NOT NULL 
-total_amount    DECIMAL(10,2) NOT NULL 
-total_discount  DECIMAL(10,2) NOT NULL DEFAULT 0.00 
-payment_method  VARCHAR(20) NOT NULL 
-created_date    DATETIME NOT NULL DEFAULT NOW() 
+![alt text](https://github.com/user-attachments/assets/9e019c9a-750c-4250-b002-d80a4ca7266c).
  
 
-5. sale_item table to break all sales into individual items. 
+# 💻 4. Implementation (SQL)
 
-sale_item_id       INT PRIMARY KEY AUTO_INCREMENT 
-sale_id            INT NOT NULL 
-product_id         INT NOT NULL 
-quantity           INT NOT NULL 
-unit_selling_price DECIMAL(10,2) NOT NULL 
-line_discount      DECIMAL(10,2) NOT NULL DEFAULT 0.00 
-line_total         DECIMAL(10,2) NOT NULL 
-created_date       DATETIME NOT NULL DEFAULT NOW() 
- 
+The database was created using:
 
-6. loyalty_transaction table totrack loyalty points earned and redeemed by each customer and link them to specific transactions. 
+CREATE DATABASE
 
-loyalty_txn_id  INT PRIMARY KEY AUTO_INCREMENT 
-customer_id     INT NOT NULL 
-sale_id         INT NULL 
-points_change   INT NOT NULL 
-reason          VARCHAR(100) 
-txn_datetime    DATETIME NOT NULL DEFAULT NOW() 
+CREATE TABLE
 
- 
+Primary Keys
 
-b) What relationships between tables are necessary? 
+Foreign Keys
 
-The schema diagram shows how the tables in the RetailStore database are related using primary and foreign keys. The following relationships are implemented: 
+Auto-increment IDs
 
-customer → sale (One-to-Many) 
-One customer can make many sales, but each sale is associated with only one customer (or none for cash sales). This relationship is implemented using customer_id (Primary Key in customer table) as a foreign key in the Sale table. 
+Default values
 
-staff → sale (One-to-Many) 
-One staff member can process many sales, but each sale is handled by only one staff member. This relationship is implemented using staff_id (Primary Key in staff table) as a foreign key in the Sale table. 
+Referential constraints
 
-sale → sale_item (One-to-Many) 
-Each sale can contain multiple sale items, but each sale item belongs to only one sale. This allows individual products, quantities, and line totals to be recorded per transaction. Implemented using sale_id (Primary Key in Sale table) as a foreign key in the Sale_item table. 
+ON DELETE CASCADE where appropriate
 
-product → sale_item (One-to-Many) 
-A product can appear in many sale items across different sales, but each sale item refers to one product. This enables accurate tracking of product sales and stock updates. Implemented using product_id (Primary Key in Product table) as a foreign key in the Sale_item table. 
-
-sale ↔ product (Many-to-Many via sale_item) 
-Each sale can contain multiple products, and each product can appear in many sales, which requires a many-to-many relationship. The many-to-many relationship between sales and products is resolved using the Sale_item junction table, which stores quantity, unit_selling_price, and line_total per product per sale. 
-
-customer → loyalty_transaction (One-to-Many) 
-One customer can have many loyalty transactions (points earned/redeemed), but each transaction belongs to one customer. Implemented using customer_id (Primary Key in customer table) as a foreign key in the loyalty_transaction table. 
-
-sale → loyalty_transaction (One-to-Many) 
-One sale can generate loyalty transactions (points earned or redeemed), but each transaction links to one sale. Implemented using sale_id (Primary Key in sale table) as a foreign key in the loyalty_transaction table. 
-
-Sale item is the junction table used to create relationships. It resolves the many-to-many relationship between sale and product. 
-
- ![alt text](https://github.com/user-attachments/assets/0db48371-9279-4e03-9876-7a59c69df25f)
-
-
-
-3. Implementing the Database 
-
-a) What SQL commands would you use to create the database and tables? 
-
-The database is created using the CREATE DATABASE command. Individual tables are then defined using the CREATE TABLE command, specifying appropriate columns and data types for each attribute. Primary keys are assigned to uniquely identify each record, while foreign keys are used to enforce relationships between tables, ensuring referential integrity and supporting accurate data linkage across the database. 
-
-b) Examples of SQL statements for creating tables and relationship 
-
-#Create the database
-CREATE DATABASE retail_store; 
-USE retail_store; 
-
-#CUSTOMERS TABLE
-CREATE TABLE customer (
-    customer_id             INT PRIMARY KEY AUTO_INCREMENT,
-    customer_name           VARCHAR(100) NOT NULL,
-    phone_number            VARCHAR(20),
-    address_line1           VARCHAR(100),
-    address_line2           VARCHAR(100),
-    city                    VARCHAR(50),
-    postcode                VARCHAR(10),
-    loyalty_points_balance  INT NOT NULL DEFAULT 0,
-	created_date DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-#STAFF TABLE  
-CREATE TABLE staff (
-    staff_id    INT PRIMARY KEY AUTO_INCREMENT,
-    staff_name  VARCHAR(100) NOT NULL,
-    role        VARCHAR(50),
-    created_date DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-# RODUCTS TABLE
-CREATE TABLE product (
-    product_id          INT PRIMARY KEY AUTO_INCREMENT,
-    barcode             VARCHAR(30) NOT NULL UNIQUE,
-    product_name        VARCHAR(100) NOT NULL,
-    product_category    VARCHAR(50) NOT NULL,
-    product_subcategory VARCHAR(50),
-    product_description TEXT,
-    cost_price          DECIMAL(10,2) NOT NULL,
-    selling_price       DECIMAL(10,2) NOT NULL,
-    stock_quantity      INT NOT NULL DEFAULT 0,
-    is_discontinued     BOOLEAN NOT NULL DEFAULT FALSE,
-    created_date DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-#SALES TABLE (one row per transaction)
-CREATE TABLE sale (
-    sale_id         INT PRIMARY KEY AUTO_INCREMENT,
-    sale_date       DATE NOT NULL,
-    sale_time       TIME NOT NULL,
-    customer_id     INT NULL,
-    staff_id        INT NOT NULL,
-    total_amount    DECIMAL(10,2) NOT NULL,
-    total_discount  DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    payment_method  VARCHAR(20) NOT NULL,
-    created_date    DATETIME NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
-);
-
-#SALE ITEMS TABLE (one row per product in sale)
+Example Table Definition
 CREATE TABLE sale_item (
-    sale_item_id       INT PRIMARY KEY AUTO_INCREMENT,
-    sale_id            INT NOT NULL,
-    product_id         INT NOT NULL,
-    quantity           INT NOT NULL,
+    sale_item_id INT PRIMARY KEY AUTO_INCREMENT,
+    sale_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
     unit_selling_price DECIMAL(10,2) NOT NULL,
-    line_discount      DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    line_total         DECIMAL(10,2) NOT NULL,
-    created_date       DATETIME NOT NULL DEFAULT NOW(),
+    line_discount DECIMAL(10,2) DEFAULT 0.00,
+    line_total DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (sale_id) REFERENCES sale(sale_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
-#LOYALTY TRANSACTIONS TABLE
-CREATE TABLE loyalty_transaction (
-    loyalty_txn_id  INT PRIMARY KEY AUTO_INCREMENT,
-    customer_id     INT NOT NULL,
-    sale_id         INT NULL,
-    points_change   INT NOT NULL,
-    reason          VARCHAR(100),
-    txn_datetime    DATETIME NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-    FOREIGN KEY (sale_id) REFERENCES sale(sale_id)
-);
+# 📥 5. Data Population
 
-#Verify tables created
-SHOW TABLES;
+Initial data includes:
 
- 
+- Staff members
 
-4. Populating the Database 
+- Products (inventory)
 
-a) How would you input initial data? 
+- Customers
 
-Initial data should be imported from existing records and validated to minimise errors, preserve historical information, and prevent accidental overwrites. This includes products, customers, prices, starting stock levels, loyalty points, and purchase history. Manual data entry should be avoided where possible, as it increases the risk of errors and breaks the audit trail. 
+- Sales transactions
 
-b) Examples of SQL INSERT statements 
+- Sale line items
 
-INSERT INTO Products VALUES (1, 'Bread', 3.00, 20); 
-INSERT INTO Customers VALUES (1, 'John Brown', '0423456789'); 
- 
+- Loyalty transactions
 
-1. Staff Members 
+Example:
 
-INSERT INTO staff (staff_name, role) VALUES  
-('Sarah Jones', 'Cashier'), 
-('Mark Lee', 'Supervisor'), 
-('Aisha Patel', 'Manager'); 
- 
+INSERT INTO sale 
+(sale_date, sale_time, customer_id, staff_id, total_amount, total_discount, payment_method)
+VALUES ('2026-01-23', '15:10:00', 1, 1, 2.00, 0.20, 'Card');
 
-2. Products (Inventory) 
+# 🔐 6. Data Integrity & Governance
 
-INSERT INTO product (barcode, product_name, product_category, product_subcategory,  
+The project includes planning for:
 
-                     cost_price, selling_price, stock_quantity) VALUES  
+Referential integrity via foreign keys
 
-('5010001234567', 'White Bread', 'Bakery', 'Bread', 0.60, 1.20, 50), 
+Validation rules and constraints
 
-('5010007654321', 'Milk 2L', 'Dairy', 'Milk', 0.70, 1.10, 80), 
+Role-based access control
 
-('5010009876543', 'Coca Cola', 'Drinks', 'Soft Drinks', 0.25, 0.80, 100); 
+Audit trail through transaction records
 
- 
+Scheduled backups
 
-3. Customers 
+Data protection compliance (GDPR considerations)
 
-INSERT INTO customer (customer_name, phone_number, address_line1, city, postcode) VALUES  
+# ⚙️ Technical Skills Demonstrated
 
-('John Smith', '07123456789', '1 High Street', 'London', 'SW1A 1AA'), 
+Relational database design
 
-('Aisha Khan', '07987654321', '10 Park Road', 'London', 'W1A 1AB'), 
+Normalisation
 
-('Mike Wilson', '07700998877', '5 Market Square', 'London', 'EC1A 1BB'); 
+One-to-many & many-to-many modelling
 
- 
- 
+Junction tables
 
-4. Sale 
+Primary & foreign key constraints
 
-# Create sale record (customer 1, staff 1) 
-INSERT INTO sale (sale_date, sale_time, customer_id, staff_id, total_amount, total_discount, payment_method)  
-VALUES ('2026-01-23', '15:10:00', 1, 1, 2.00, 0.20, 'Card'); 
- 
+Transaction modelling
 
-# Add sale items to that sale (sale_id = 1) 
-INSERT INTO sale_item (sale_id, product_id, quantity, unit_selling_price, line_discount, line_total) VALUES  
-(1, 1, 1, 1.20, 0.00, 1.20),  -- 1 loaf of bread 
-(1, 2, 1, 1.00, 0.20, 0.80);  -- 1 milk with discount 
- 
+Inventory tracking logic
 
- 
+# SQL DDL & DML
 
-6. Record Loyalty Points Earned 
+Role-based data access planning
 
-# Log loyalty transaction 
-INSERT INTO loyalty_transaction (customer_id, sale_id, points_change, reason)  
-VALUES (1, 1, 5, 'Points earned on purchase'); 
- 
- 
+Data governance awareness
 
-7. Redeem Loyalty Points 
+# 🚀 What This Project Demonstrates
 
-# Customer redeems 3 points for discount (no sale linked) 
-INSERT INTO loyalty_transaction (customer_id, points_change, reason)  
-VALUES (1, -3, 'Points redeemed for discount'); 
+This project shows the ability to:
 
- 
+Translate business requirements into a structured relational schema
 
-5. Maintaining the Database 
+Design scalable database systems
 
-a) Keeping the database accurate and up to date
+Implement referential integrity
 
-To ensure the database remains accurate and up to date, all changes and sales should be recorded through systematic audits and, where possible, automated updates for prices, product lists, and stock levels. Standard operating procedures (SOPs) should be established to maintain data accuracy, including recording all transactions and updates. Data validation rules must be enforced, such as enforcing value ranges, correct data formats, avoiding NULL values in primary keys and checking that all values are unique using distinct command) and follow the same format (consistency), and regularly checking for errors or duplicates. Staff training is essential to ensure consistent and correct use of the system across all users. Any discrepancies should be investigated and corrected immediately. Additionally, a RACI matrix should be used to assign responsibilities, clearly defining who is Responsible, Accountable, Consulted, and Informed for managing and maintaining each type of data. 
+Consider security and governance in database design
 
-b) Handling backups and data security
+Build production-style transactional systems
 
-Daily backups would be automatically scheduled, stored securely, and replicated to a cloud environment to prevent data loss. Data security would be maintained by implementing role-based access controls, permission levels, passwords, and encryption, ensuring customer information is protected from unauthorised access. All staff would receive training on GDPR, the Data Protection Act, and the company’s data governance policies to maintain legal compliance, confidentiality, and best-practice data management. We would also integrate different responsibilities in different data job descriptions and define who is clearly defining who is Responsible, Accountable, Consulted, and Informed for different tasks in handling backups and data security. 
+# 🛠 Tech Stack
 
- 
+MySQL
 
- 
+SQL (DDL & DML)
+
+Relational Modelling
+
+#💡 📈 Potential Future Improvements
+
+Stored procedures for processing sales
+
+Triggers for automatic stock updates
+
+Indexing strategy for performance optimisation
+
+Reporting views for management dashboards
+
+API integration for POS systems 
 
  
 
