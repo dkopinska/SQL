@@ -271,7 +271,7 @@ SQL (DDL & DML)
 
 Relational Modelling
 
-#💡 📈 Potential Future Improvements
+# 📈 Potential Future Improvements
 
 Stored procedures for processing sales
 
