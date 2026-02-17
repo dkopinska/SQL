@@ -42,9 +42,9 @@ City name frequency analysis
 
 Ranking cities by population within each country
 
-#🧠 Key Concepts Applied
+# 🧠 Key Concepts Applied
 
-# Relational database modelling
+Relational database modelling
 
 Query optimisation using joins instead of nested queries
 
